@@ -8,7 +8,7 @@
  * @param {Object} object 基本对象
  *
  */
-function sortObjectKey (object) {
+function sortObjectKey(object) {
     let sortkeys = Object.keys(object).sort()
     let retObj = {}
     sortkeys.forEach(item => {
@@ -22,7 +22,7 @@ function sortObjectKey (object) {
  * 求下一个月第一天
  * @param {Date|String} date 日期
  */
-function nextMonth (date) {
+function nextMonth(date) {
     let nowDate, next
     if (date instanceof Date) {
         nowDate = date
@@ -46,7 +46,7 @@ function nextMonth (date) {
  * @param name
  * @returns {string}
  */
-function getCookie (cname) {
+function getCookie(cname) {
     var name = cname + '='
     var ca = document.cookie.split(';')
     for (var i = 0; i < ca.length; i++) {
@@ -62,7 +62,7 @@ function getCookie (cname) {
  * @param value
  * @param expiresHours
  */
-function setCookie (cname, cvalue, exdays) {
+function setCookie(cname, cvalue, exdays) {
     var d = new Date()
     d.setTime(d.getTime() + exdays * 60 * 60 * 1000)
     // var expires = 'expires=' + d.toGMTString()
@@ -75,7 +75,7 @@ function setCookie (cname, cvalue, exdays) {
  * @param {Date|String} date 日期
  *
  */
-function resolveDate (date) {
+function resolveDate(date) {
     if (typeof date === 'string') date = parseInt(date)
     if (typeof date === 'number') date = new Date(date)
     if (date instanceof Date) {
@@ -94,7 +94,7 @@ function resolveDate (date) {
  * 返回 2017-08-18 的日期格式
  * @param {Object} dateObj  分解后的日期格式
  */
-function dateFormatBar (dateObj) {
+function dateFormatBar(dateObj) {
     dateObj = resolveDate(dateObj)
     // debugger
     let month = dateObj.month
@@ -109,7 +109,7 @@ function dateFormatBar (dateObj) {
  * 返回 08-18 的日期格式
  * @param {Object} dateObj  分解后的日期格式
  */
-function dateFormat (dateObj) {
+function dateFormat(dateObj) {
     dateObj = resolveDate(dateObj)
     // debugger
     let month = dateObj.month + 1
@@ -124,7 +124,7 @@ function dateFormat (dateObj) {
  * 返回 当前日期的下一天 2017-10-30  => 2017/10/31
  * @param {*} date
  */
-function dateNextDay (date) {
+function dateNextDay(date) {
     let mt = date.replace(/-/g, '/')
     let day = 24 * 60 * 60 * 1000
     let mtms = new Date(mt).getTime()
@@ -136,7 +136,7 @@ function dateNextDay (date) {
  * 返回 20170818 的日期格式
  * @param {Object} dateObj  分解后的日期格式
  */
-function dateFormatMMdd (dateObj) {
+function dateFormatMMdd(dateObj) {
     dateObj = resolveDate(dateObj)
     // debugger
     let month = dateObj.month + 1
@@ -152,7 +152,7 @@ function dateFormatMMdd (dateObj) {
  * @param name
  * @returns {null}
  */
-function getQueryString (name) {
+function getQueryString(name) {
     var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i')
     var r = window.location.search.substr(1).match(reg)
     if (r !== null) return unescape(r[2])
@@ -164,7 +164,7 @@ function getQueryString (name) {
  * 将非正常号码，解析为正常号码
  * @param {String | Number} phone  电话号码， 有多种形式，可能有 189-5164-0521 189 5164 0521
  */
-function parseTell (phone) {
+function parseTell(phone) {
     phone = phone.replace('+86', '')
     phone = phone.replace(/\s/g, '')
     phone = phone.replace(/-/g, '')
@@ -177,7 +177,7 @@ function parseTell (phone) {
  * 求明天
  * @param {Date} date 日期对象
  */
-function tomorrow (date) {
+function tomorrow(date) {
     if (date instanceof Date) {
         const cloneDate = new Date(date.toString())
         cloneDate.setDate(cloneDate.getDate() + 1)
@@ -191,7 +191,7 @@ function tomorrow (date) {
  * 请时间的 Year-month-date 格式
  * @param {Date} date 日期对象
  */
-function dateHyphen (date) {
+function dateHyphen(date) {
     if (date instanceof Date) {
         return (
             date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
@@ -205,7 +205,7 @@ function dateHyphen (date) {
  * 返回 当前日期的后三周 2017-10-1  => 2017/10/22
  * @param {*} date
  */
-function dateNextThreeWeek (date) {
+function dateNextThreeWeek(date) {
     let day = 24 * 60 * 60 * 1000 * 21
     let mtms = new Date(date).getTime()
     return mtms + day
@@ -213,7 +213,7 @@ function dateNextThreeWeek (date) {
 
 
 // 浮点数加法运算
-function FloatAdd (arg1, arg2) {
+function FloatAdd(arg1, arg2) {
     var r1, r2, m
     try {
         r1 = arg1.toString().split('.')[1].length
@@ -231,7 +231,7 @@ function FloatAdd (arg1, arg2) {
 
 
 // 浮点数减法运算
-function FloatSub (arg1, arg2) {
+function FloatSub(arg1, arg2) {
     var r1, r2, m, n
     try {
         r1 = arg1.toString().split('.')[1].length
@@ -251,16 +251,16 @@ function FloatSub (arg1, arg2) {
 
 
 // 浮点数乘法运算
-function FloatMul (arg1, arg2) {
+function FloatMul(arg1, arg2) {
     var m = 0
     var s1 = arg1.toString()
     var s2 = arg2.toString()
     try {
         m += s1.split('.')[1].length
-    } catch (e) {}
+    } catch (e) { }
     try {
         m += s2.split('.')[1].length
-    } catch (e) {}
+    } catch (e) { }
     return (
         Number(s1.replace('.', '')) * Number(s2.replace('.', '')) / Math.pow(10, m)
     )
@@ -275,7 +275,7 @@ function FloatMul (arg1, arg2) {
  * @param {number} num2 第二个数值
  * @return {Array} 每个数值小数点后面数字的个数
  */
-function decimalLength (num1, num2) {
+function decimalLength(num1, num2) {
     var length1
     var length2
     try {
@@ -300,7 +300,7 @@ function decimalLength (num1, num2) {
  * @param {number} num2 第二个数值
  * @return {number} 相除的结果
  */
-function computeDivide (num1, num2) {
+function computeDivide(num1, num2) {
     var result = decimalLength(num1, num2)
     var length1 = result[0]
     var length2 = result[1]
@@ -316,7 +316,7 @@ function computeDivide (num1, num2) {
  * 下载excel 需要后端提供接口
  * @param {*} url
  */
-function downLoadUrl (url) {
+function downLoadUrl(url) {
     let iframe = document.createElement('iframe')
     iframe.style.display = 'none'
     iframe.src = url
@@ -331,18 +331,33 @@ function downLoadUrl (url) {
  *  不需要接口 ,利用blob对象
  * @param {*} url
  */
-function dataToTxt(){
+function dataToTxt() {
     var content = this.getTxt()
     // 创建隐藏的可下载链接
     var eleLink = document.createElement('a');
     eleLink.download = 'xxxx';
     eleLink.style.display = 'none';
     // 字符内容转变成blob地址
-    var blob = new Blob([content],{type:"text/plain",endings:"native"});
+    var blob = new Blob([content], { type: "text/plain", endings: "native" });
     eleLink.href = URL.createObjectURL(blob);
     // 触发点击
     document.body.appendChild(eleLink);
     eleLink.click();
     // 然后移除
     document.body.removeChild(eleLink);
+}
+
+/**
+ * js计算精度丢失问题解决方案
+ * 
+ * @static
+ * @param {any} f 计算公式
+ * @param {any} digit 进制 默认为2
+ * @returns 
+ * @memberof Common
+ */
+function compute(f, digit) {
+    digit = digit ? digit : 2
+    var m = Math.pow(10, digit)
+    return Math.round(f * m, 10) / m
 }
