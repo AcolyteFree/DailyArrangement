@@ -7,6 +7,7 @@
 >> Mobile -- 移动端
 
 >> Package -- 组件demo
+    >> calendar.html  日历二维数组的生成
 
 >> Pc -- Pc端
 
