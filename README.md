@@ -6,6 +6,8 @@
 
 >> Mobile -- 移动端
 
+>> Package -- 组件demo
+
 >> Pc -- Pc端
 
 >> utils -- 工具类

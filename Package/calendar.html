@@ -1,0 +1,196 @@
+/*
+ * @Author: Nick-qi
+ * @Date: 2018-05-16 13:20:42
+ * @LastEditors: Nick-qi
+ * @LastEditTime: 2018-05-16 13:24:22
+ * @Description: 
+ * @Email: q7but@qq.com
+ */
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        html,
+        body {
+            margin: 0 0;
+            padding: 0 0;
+        }
+
+        ul {
+            width: 100%;
+            padding: 0 0;
+        }
+
+        li {
+            width: 14%;
+            height: 50px;
+            float: left;
+            text-align: center;
+            list-style: none;
+        }
+
+        h2 {
+            width: 14%;
+            height: 50px;
+            text-align: center;
+
+            float: left;
+        }
+
+        .clearfix {
+            overflow: auto;
+            _height: 1%
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+
+        const SETDATE = {
+            firstDay: false,
+            weekName: this.firstDay ? ['周日', '周一', '周二', '周三', '周四', '周五', '周六'] : ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+            /**
+             * 获取日历组件的二维数组
+             * 用对象包裹 ex: SETDATE.getDate({time = 12333455, limit =2, firstDay = true}) 使用默认:  SETDATE.getDate({})
+             * 默认: 当前时间下的12个月的数据, 
+             * @param {any} time 时间戳
+             * @param {any} limit 限制,获取当前几个月之后的数据,默认12个月的
+             * @param {any} firstDay 星期一,星期天为第一天,false: 星期一(默认),true: 星期日, 
+             * @returns 返回日历二维数组
+             */
+            getDate: function ({ time = new Date().getTime(), limit = 12, firstDay = false }) {
+                console.log(time, limit, firstDay)
+                this.firstDay = firstDay
+                time = new Date(time)
+                let year = time.getFullYear()
+                let month = time.getMonth() + 1
+                console.log(year, month)
+                console.log(this.weekName)
+                let res = {}
+                for (let i = 0; i < limit; i++) {
+                    if (i > limit) break
+                    res[`${year}${month < 10 ? '0' + month : month}`] = this.init(year, month)
+                    month += 1
+                    if (month > 12) {
+                        year++
+                        month = 1
+                    }
+                }
+                return res
+            }, 
+            // TODO: 设置单个数据属性,还有对应的 删除 更新
+            setDateAttr: function (arr, key, value) {
+                arr.forEach(item => item[key] = value)
+                return arr
+            },
+            dateRender: function (obj) {
+                for (let key in obj) {
+                    let dateBox = document.createElement('div')
+                    console.log(key)
+                    let item = obj[key]
+                    let content = ''
+                    for (let i = 0, len = item.length; i < len; i++) {
+                        for (let n = 0; n < item[i].length; n++) {
+                            let target = item[i][n]
+                            content += `<li>${target.day ? target.day : ''}</li>`
+                        }
+                    }
+                    let weekNameHTML = ''
+                    for (let i = 0, len = this.weekName.length; i < len; i++) {
+                        weekNameHTML += '<h2>' + this.weekName[i] + '</h2>'
+                    }
+                    let html = `
+                        <h1>${key}</h1> 
+                        <div class='clearfix'>
+                        ${weekNameHTML}
+                        </div>
+                        <ul class='clearfix'>
+                            ${content}
+                        </ul>     
+                    `
+                    console.log(weekNameHTML)
+                    dateBox.innerHTML = html
+                    document.body.appendChild(dateBox)
+                }
+            },
+            init: function (year, month) {
+                let monthDate = this.setMonthDate(year, month)
+                let currentMonthLength = this.fillMonthDate(monthDate, year, month)
+                return this.sliceArray(currentMonthLength, 7)
+            },
+            isLeapYear: function (year) {
+                return (0 == year % 4 && ((year % 100 != 0) || (year % 400 == 0)));
+            },
+            isMonthLength: function (year, month) {
+                switch (month) {
+                    case 1:
+                    case 3:
+                    case 5:
+                    case 7:
+                    case 8:
+                    case 10:
+                    case 12:
+                        return 31;
+                    case 2:
+                        return this.isLeapYear(year) ? 28 : 29
+                    case 4:
+                    case 6:
+                    case 9:
+                    case 11:
+                        return 30
+                }
+            },
+            setMonthDate: function (year, month) {
+                let monthDate = []
+                for (let i = 0, len = this.isMonthLength(year, month); i < len; i++) {
+                    let obj = {
+                        year: year,
+                        month: month,
+                        day: i + 1
+                    }
+                    monthDate.push(obj)
+                }
+                return monthDate
+            },
+            fillMonthDate: function (arr, year, month) {
+                let obj = {
+                    year: year,
+                    month: month,
+                    day: null
+                }
+                let beginFill = new Date(`${year}/${month}/1`).getDay()
+                let endFill = new Date(`${year}/${month}/${arr[arr.length - 1].day}`).getDay()
+                let beginLimit = this.firstDay ? beginFill + 1 : beginFill
+                let endLimit = this.firstDay ? endFill + 1 : endFill
+                for (let n = 1; n < beginLimit; n++) {
+                    arr.unshift(obj)
+                }
+                for (let i = 0; i < 7 - endLimit; i++) {
+                    arr.push(obj)
+                }
+                return arr
+            },
+            sliceArray: function (array, size) {
+                var result = [];
+                for (var x = 0; x < Math.ceil(array.length / size); x++) {
+                    var start = x * size;
+                    var end = start + size;
+                    result.push(array.slice(start, end));
+                }
+                return result;
+            },
+          
+        }
+        SETDATE.dateRender(SETDATE.getDate({}))
+        console.log(SETDATE.getDate({ limit: 2 }))
+    </script>
+</body>
+
+</html>
