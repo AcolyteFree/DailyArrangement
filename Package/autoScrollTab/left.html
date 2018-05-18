@@ -1,0 +1,122 @@
+/*
+ * @Author: Nick-qi
+ * @Date: 2018-05-18 18:27:10
+ * @LastEditors: Nick-qi
+ * @LastEditTime: 2018-05-18 18:27:34
+ * @Description: 
+ * @Email: q7but@qq.com
+ */
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>tab 自动左对齐</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0
+        }
+
+        ul {
+            margin: 0;
+            width: 200px;
+            padding: 0;
+            white-space: nowrap;
+            overflow-x: scroll;
+            overflow-y: hidden;
+            font-size: 0;
+        }
+
+        ul>li {
+            width: 50px;
+            display: inline-block;
+            line-height: 60px;
+            font-size: 20px;
+        }
+
+        ul>li:nth-child(odd) {
+            background: skyblue;
+        }
+
+        ul>li:nth-child(even) {
+            background: greenyellow;
+        }
+        .red {
+            background-color: red !important; 
+        }
+    </style>
+</head>
+
+<body>
+    <ul>
+        <li>tab1</li>
+        <li>tab2</li>
+        <li>tab3</li>
+        <li>tab4</li>
+        <li>tab5</li>
+        <li>tab6</li>
+    </ul>
+
+    <script>
+        let parentUl = document.getElementsByTagName('ul')[0]
+        let items = parentUl.children
+        addLi()
+        // 功能点： 点击tab， 默认将其滚动至ul最左边
+        for (let i = 0, len = items.length; i < len; i++) {
+            items[i].onclick = () => {
+                scrollTab(i, ()=>{
+                    for (let n = 0, len = items.length; n < len; n++) {
+                        let el = items[n]
+                        n === i ? el.classList.add('red') : el.classList.remove('red')
+                    }
+                })
+            }
+        }
+
+        // 在ul最后增加一个li
+        // 需求分析: 当用户点击最后一个tab时没有足够的宽度让最后一个tab滚动到最左侧
+        function addLi() {
+            let lastLeft = parseFloat(window.getComputedStyle(parentUl, null).width) - parseFloat(window.getComputedStyle(items[items.length -
+                1], null).width)
+            let liDom = document.createElement('li')
+            liDom.style.width = lastLeft + 'px'
+            parentUl.appendChild(liDom)
+        }
+        // 滚动效果
+        // index ： 用户点击的li 下标
+        // fn: 回调函数, 滚动结束后执行
+        // step： 用户自定义 每一次定时要加的步数 默认: 5
+        // second： 用户自定义 多久执行一次 默认: 10ms
+        function scrollTab(index, fn, step = 5, second = 10) {
+            let liLeft = items[index].offsetLeft
+            let basic = parentUl.scrollLeft
+            let timer
+            clearInterval(timer)
+            timer = setInterval(() => {
+                let bol
+                if (liLeft > basic) {
+                    basic += step
+                    bol = basic >= liLeft && true
+                } else {
+                    basic -= step
+                    bol = basic <= liLeft && true
+                }
+                if (bol) {
+                    parentUl.scrollLeft = liLeft
+                    clearInterval(timer)
+                    fn && fn()
+                } else {
+                    parentUl.scrollLeft = basic
+                }
+            }, second)
+        }
+    </script>
+
+
+</body>
+
+</html>

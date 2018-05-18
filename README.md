@@ -7,10 +7,15 @@
 > Mobile -- 移动端
 
 > Package -- 组件demo  
->> calendar.html -- 日历二维数组的生成
+>> calendar -- 日历二维数组的生成
+
+>> autoScrollTab -- tab栏点击自动滚动到左侧 || 居中
 
 > Pc -- Pc端
 
 > utils -- 工具类
 
 > vue-components -- vue组件
+
+> Learning -- 正在学习中的一些技术demo
+>> Node.js  -- Node.js 的学习案例

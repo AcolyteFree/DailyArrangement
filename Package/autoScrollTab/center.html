@@ -1,0 +1,146 @@
+/*
+ * @Author: Nick-qi
+ * @Date: 2018-05-18 18:27:13
+ * @LastEditors: Nick-qi
+ * @LastEditTime: 2018-05-18 18:27:40
+ * @Description: 
+ * @Email: q7but@qq.com
+ */
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>tab 自动居中</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0
+        }
+
+        ul {
+            margin: 0;
+            width: 200px;
+            padding: 0;
+            white-space: nowrap;
+            overflow-x: scroll;
+            overflow-y: hidden;
+            font-size: 0;
+        }
+
+        ul>li {
+            width: 50px;
+            display: inline-block;
+            line-height: 60px;
+            font-size: 20px;
+        }
+
+        ul>li:nth-child(odd) {
+            background: skyblue;
+        }
+
+        ul>li:nth-child(even) {
+            background: greenyellow;
+        }
+
+        .red {
+            background-color: red !important;
+        }
+    </style>
+</head>
+
+<body>
+    <ul>
+        <li>tab1</li>
+        <li>tab2</li>
+        <li>tab3</li>
+        <li>tab4</li>
+        <li>tab5</li>
+        <li>tab6</li>
+    </ul>
+
+    <script>
+        let parentUl = document.getElementsByTagName('ul')[0]   // 父级盒子
+        let items = parentUl.children  // tab 子元素集合
+        let parentWidth = parseFloat(window.getComputedStyle(parentUl, null).width) // 父级盒子的宽度
+        let parentCenterX = parentWidth / 2  // 父级盒子的中心点
+        let isOpen = checkScroll()
+        for (let i = 0, len = items.length; i < len; i++) {
+            if (!isOpen) break
+            let item = items[i]
+            item.onclick = () => {
+                scrollCenter(i, function () {
+                    for (let n = 0, len = items.length; n < len; n++) {
+                        let el = items[n]
+                        n === i ? el.classList.add('red') : el.classList.remove('red')
+                    }
+                })
+            }
+        }
+        /* 
+            功能: 选择tab 默认将其滚动到中间位置
+                1. 滚动触发前提: 点击tab , tab的offsetLeft > 父级盒子的中心点
+                2. 只有当所有tab的宽度超过中心点的时候,才在父级盒子后追加一个空tab,空tab的宽度为 父级盒子的宽度 - 最后一个tab的宽度
+        */
+
+        // 是否具备滚动条件
+        function checkScroll() {
+            console.log('开始')
+            let itemsWidth = 0
+            for (let i = 0, len = items.length; i < len; i++) {
+                itemsWidth += parseFloat(window.getComputedStyle(items[i], null).width)
+            }
+            if (itemsWidth > parentCenterX) {
+                addLi()
+                return true   // 开启滚动
+            }
+            return false
+        }
+
+        // 滚动函数
+        function scrollCenter(index, fn = () => console.log('滚动结束'), step = 2, second = 1) {
+            let itemOffsetLeft = parseFloat(window.getComputedStyle(items[index], null).width) / 2 + items[index].offsetLeft // 点击tab需要滚动的scroll值 距离父级盒子左侧的距离 + 本身的宽度 /2  
+            let nowParentScroll = parentUl.scrollLeft  // 当前父级盒子的scroll值
+            let scrollX = itemOffsetLeft - parentCenterX  // 需要滚动的距离
+            let timer
+            clearInterval(timer)
+            timer = setInterval(() => {
+                let bol
+                if (scrollX > nowParentScroll) {
+                    nowParentScroll = nowParentScroll + step
+                    bol = nowParentScroll >= scrollX && true
+                } else {
+                    nowParentScroll = nowParentScroll - step
+                    bol = nowParentScroll <= scrollX && true
+                }
+                if (bol) {
+                    parentUl.scrollLeft = scrollX
+                    clearInterval(timer)
+                    // 滚动结束后 设置子元素的属性,或者 进行下一步操作
+                    fn && fn()
+                } else {
+                    parentUl.scrollLeft = nowParentScroll
+                }
+            }, second)
+        }
+
+        // 在ul最后增加一个li
+        // 需求分析: 当用户点击最后一个tab时没有足够的宽度让最后一个tab滚动到理想位置
+        function addLi() {
+            let lastLeft = parentCenterX - parseFloat(window.getComputedStyle(items[items.length -
+                1], null).width) / 2  // 父级盒子一半的宽度 + 最后一个子元素的一半宽
+            let liDom = document.createElement('li')
+            liDom.style.width = lastLeft + 'px'
+            parentUl.appendChild(liDom)
+        }
+
+
+    </script>
+
+
+</body>
+
+</html>
