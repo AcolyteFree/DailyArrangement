@@ -16,6 +16,3 @@
 > utils -- 工具类
 
 > vue-components -- vue组件
-
-> Learning -- 正在学习中的一些技术demo
->> Node.js  -- Node.js 的学习案例

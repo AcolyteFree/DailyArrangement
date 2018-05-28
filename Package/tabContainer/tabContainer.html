@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>移动端tabContainer</title>
+    <link rel="stylesheet" href="../base.css">
+    <script src="../rem.js"></script>
+    <style>
+        body {
+            max-width: 320px;
+            overflow: hidden;
+        }
+        .red {
+            background-color: red;
+        }
+        .yellow {
+            background-color: yellow;
+        }
+        .black {
+            background-color: black;
+        }
+        ul > li {
+            height: 2rem;
+            display: inline-block;
+    
+        }
+        ul {
+            width: 300%;
+            white-space: nowrap;
+            font-size: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <ul>
+        <li class="red"></li>
+        <li class="yellow"></li>
+        <li class="black"></li>
+    </ul>
+    <script>
+        setBaseStyle()
+       function  setBaseStyle() {
+           let liWidth = document.body.clientWidth
+           let elLi = document.getElementsByTagName('li')
+           for(let item in elLi) {
+                elLi[item] && (elLi[item].style.width = liWidth + 'px')
+           }
+       }
+
+    </script>
+</body>
+
+</html>

@@ -346,18 +346,3 @@ function dataToTxt() {
     // 然后移除
     document.body.removeChild(eleLink);
 }
-
-/**
- * js计算精度丢失问题解决方案
- * 
- * @static
- * @param {any} f 计算公式
- * @param {any} digit 进制 默认为2
- * @returns 
- * @memberof Common
- */
-function compute(f, digit) {
-    digit = digit ? digit : 2
-    var m = Math.pow(10, digit)
-    return Math.round(f * m, 10) / m
-}
