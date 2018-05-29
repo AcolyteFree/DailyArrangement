@@ -11,6 +11,8 @@
 
 >> autoScrollTab -- tab栏点击自动滚动到左侧 || 居中
 
+>> tabContainer -- 滑动切换选项卡
+
 > Pc -- Pc端
 
 > utils -- 工具类

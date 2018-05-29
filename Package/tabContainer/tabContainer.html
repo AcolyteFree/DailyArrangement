@@ -9,47 +9,151 @@
     <link rel="stylesheet" href="../base.css">
     <script src="../rem.js"></script>
     <style>
-        body {
-            max-width: 320px;
-            overflow: hidden;
-        }
         .red {
             background-color: red;
         }
+
         .yellow {
             background-color: yellow;
         }
+
         .black {
             background-color: black;
         }
-        ul > li {
-            height: 2rem;
+
+        .root-ul>li {
+            width: 100%;
+            height: 15rem;
             display: inline-block;
-    
+            vertical-align: middle;
+
+            text-align: center;
+            font-size: 2rem;
+            color: white;
         }
-        ul {
-            width: 300%;
+
+        .root-ul {
             white-space: nowrap;
             font-size: 0;
         }
+
+        .root {
+            width: 100%;
+            overflow: hidden;
+        }
+        .test {
+            width: 100%;
+            height: 8rem;
+            overflow: auto;
+        }
+        .test > p{
+            font-size: 1rem;
+        }
+
     </style>
 </head>
-
+<!-- TODO: 完成基本功能
+    待补足 : 1. 当li标签里面含有 其他元素时, 阻止默认事件
+            2. 当触摸点不在li标签上的时候,需要处理
+-->
 <body>
-    <ul>
-        <li class="red"></li>
-        <li class="yellow"></li>
-        <li class="black"></li>
-    </ul>
+    <div class="root">
+        <ul class="root-ul">
+            <li class="red" onclick="console.log('冒泡的处理')">
+                <!-- <div class="test">
+                    <p>1我是测试点击事件的</p>
+                    <p>2我是测试点击事件的</p>
+                    <p>3我是测试点击事件的</p>
+                    <p>4我是测试点击事件的</p>
+                </div> -->
+                content 1
+            </li>
+            <li class="yellow">content 2</li>
+            <li class="black">content 3</li>
+        </ul>
+    </div>
+
     <script>
-        setBaseStyle()
-       function  setBaseStyle() {
-           let liWidth = document.body.clientWidth
-           let elLi = document.getElementsByTagName('li')
-           for(let item in elLi) {
-                elLi[item] && (elLi[item].style.width = liWidth + 'px')
-           }
-       }
+        const slide = {
+            index: 0, // 当前下标
+            itemLength: null, // 子元素length
+            nowItem: null, // 当前触摸元素
+            itemParent: null, // 父元素
+            itemWidth: null, // 子元素宽度, 一般都是等宽
+            startX: null, // touch 第一次落点
+            moveX: null, // touch 移动中落点的改变
+            endX: null, // touch 结束落点
+            // 触摸开始
+            slideStart: e => {
+                // console.log('触摸开始',e)
+                if (e.target.nodeName !== 'LI') return console.log('走你')
+                slide.nowItem = e.target
+                if (!slide.itemParent) {
+                    slide.itemParent = e.target.parentNode
+                    slide.itemLength = e.target.parentNode.children.length
+                    slide.itemWidth = parseInt(window.getComputedStyle(e.target, null).width)
+                }
+                slide.startX = e.changedTouches[0].clientX
+                slide.itemParent.style.transition = 'none'
+            },
+            // 移动中
+            slideMove: e => {
+                // console.log('移动中', e)
+                if (e.target.nodeName !== 'LI') return console.log('走你')
+                slide.moveX = e.changedTouches[0].clientX
+                let distance = slide.moveX - slide.startX + (-slide.itemWidth * slide.index)
+                slide.moveTranslate(distance)
+            },
+            // 触摸结束
+            slideEnd: e => {
+                if (e.target.nodeName !== 'LI') return console.log('走你')
+                slide.endX = e.changedTouches[0].clientX
+                slide.checkTouch()
+            },
+            // 实时移动
+            moveTranslate: (distance, transition) => {
+                let cssText = `
+                    ${transition ? 'transition: all 200ms;' : ''}
+                    transform:translateX(${distance}px)
+                `
+                slide.itemParent.style = cssText
+            },
+
+            // 判断用户是查看上一页还是下一页, 并设置回弹效果
+            checkTouch: () => {
+                //  滑动距离超过1/3 切换, 否则回弹回去
+                let endTranslateX = slide.endX - slide.startX + (-slide.itemWidth * slide.index)
+                let interval = -slide.itemWidth * slide.index - endTranslateX
+                let isLeft = interval > 0 ? true : false
+                Math.abs(interval) > (slide.itemWidth / 3) ? (isLeft ? slide.slideNext() : slide.slidePrev()) : slide.moveTranslate(-slide.itemWidth * slide.index, true)
+            },
+            slideNext: () => {
+                let nowIndex = slide.index + 1
+                console.log('下一张', nowIndex, slide.index)
+                if (slide.isOutOfLength(nowIndex)) {
+                    slide.moveTranslate(-slide.itemWidth * nowIndex, true)
+                    slide.index = nowIndex
+                }
+            },
+            slidePrev: () => {
+                console.log('上一张')
+                let nowIndex = slide.index - 1
+                if (slide.isOutOfLength(nowIndex)) {
+                    slide.moveTranslate(-slide.itemWidth * nowIndex, true)
+                    slide.index = nowIndex
+                }
+            },
+            // 是否超出子元素长度
+            isOutOfLength: (nowIndex) => {
+                console.log(nowIndex, nowIndex >= 0 && nowIndex < slide.itemLength)
+                return (nowIndex >= 0 && nowIndex < slide.itemLength) ? true : slide.moveTranslate(-slide.itemWidth * slide.index, true)
+            }
+
+        }
+        document.addEventListener('touchstart', slide.slideStart)
+        document.addEventListener('touchmove', slide.slideMove)
+        document.addEventListener('touchend', slide.slideEnd)
+
 
     </script>
 </body>
